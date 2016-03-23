@@ -7,6 +7,8 @@ require "pry"
 
 require "jukeborx/version"
 require "jukeborx/song"
+require "jukeborx/user"
+require "jukeborx/tracker"
 
 db_config = YAML.load(File.open("config/database.yml"))
 ActiveRecord::Base.establish_connection(db_config)
@@ -15,7 +17,7 @@ ActiveRecord::Base.logger = Logger.new(STDOUT)
 MUSIC_DIR = "/Users/brit/Music/downloads"
 
 def import(dir)
-  files = Dir.glob(File.join(dir, '*/*.mp3'))
+  files = Dir.glob(File.join(dir, '*.mp3'))
   files.each do |mp3_file|
     begin
       tag = Mp3Info.open(mp3_file) { |mp3| mp3.tag }
@@ -111,6 +113,13 @@ module Jukeborx
       end
     end
 
+    get "/stop" do
+      Song.stop
+      redirect to("/")
+    end
+
     run! if app_file == $0
   end
 end
+
+binding.pry

@@ -4,6 +4,10 @@ module Jukeborx
       spawn("afplay \"#{self.filename}\"")
     end
 
+    def self.stop
+      spawn("killall afplay")
+    end
+
     def to_json(options=nil)
       {
         id:      self.id,
